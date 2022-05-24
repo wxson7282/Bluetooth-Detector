@@ -40,13 +40,11 @@ class MainViewModel : ViewModel() {
             if (isChecked) startScan() else stopScan()
         }
 
-    init {
-        deviceList.clear()
-    }
-
     private fun startScan() {
         Log.i(tag, "startScan()")
         if (!isScanning) {
+            deviceList.clear()
+            deviceAdapter.notifyDataSetChanged()
             scanner.startScan(scanCallback)
             isScanning = true
         }

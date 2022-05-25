@@ -40,6 +40,11 @@ class MainViewModel : ViewModel() {
             if (isChecked) startScan() else stopScan()
         }
 
+    override fun onCleared() {
+        Log.i(tag, "onCleared")
+        stopScan()
+    }
+
     private fun startScan() {
         Log.i(tag, "startScan()")
         if (!isScanning) {

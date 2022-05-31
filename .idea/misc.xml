@@ -7,6 +7,9 @@
         <entry key="..\:/AndroidStudioProjects/BluetoothDetector/app/src/main/res/layout/device_item.xml" value="0.2717391304347826" />
         <entry key="..\:/AndroidStudioProjects/BluetoothDetector/blt_detector/src/main/res/layout/activity_main.xml" value="0.2717391304347826" />
         <entry key="..\:/AndroidStudioProjects/BluetoothDetector/blt_detector/src/main/res/layout/device_item.xml" value="0.2717391304347826" />
+        <entry key="..\:/AndroidStudioProjects/BluetoothDetector/blt_rssi/src/main/res/drawable/ic_connected.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/BluetoothDetector/blt_rssi/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/BluetoothDetector/blt_rssi/src/main/res/layout/device_item.xml" value="0.22083333333333333" />
         <entry key="..\:/AndroidStudioProjects/BluetoothDetector/bluetoothdetector/src/main/res/layout/activity_main.xml" value="0.2717391304347826" />
       </map>
     </option>

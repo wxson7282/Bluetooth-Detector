@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Blt_Rssi</string>
+    <string name="read">读取</string>
+    <string name="stop">停止</string>
+    <string name="connectState">连接状态</string>
+    <string name="hint">连接和断开时请点击相应设备</string>
+    <string name="rssi_format">%1$ddBm</string>
+</resources>

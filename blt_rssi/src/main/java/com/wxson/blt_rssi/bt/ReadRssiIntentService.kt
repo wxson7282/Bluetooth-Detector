@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.wxson.blt_rssi.bt
 
 import android.app.IntentService

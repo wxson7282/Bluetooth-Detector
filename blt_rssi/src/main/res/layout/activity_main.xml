@@ -20,11 +20,13 @@
 
     <TextView
         android:id="@+id/txtRssi"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
         android:background="@android:color/holo_orange_light"
+        app:layout_constraintEnd_toStartOf="@+id/ivConnectState"
         app:layout_constraintStart_toEndOf="@+id/toggleBtnRssi"
         app:layout_constraintTop_toTopOf="parent" />
 

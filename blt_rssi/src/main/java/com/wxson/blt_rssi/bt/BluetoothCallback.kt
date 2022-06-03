@@ -18,6 +18,7 @@ class BluetoothCallback : BluetoothGattCallback()  {
         const val ON_CONNECTED = "com.wxson.blt_rssi.action.OnConnected"
         const val ON_DISCONNECTED = "com.wxson.blt_rssi.action.OnDisconnected"
         const val ON_READ_RSSI_SUCCESS = "com.wxson.blt_rssi.action.OnReadRssiSuccess"
+        const val ON_GATT_FAILED = "com.wxson.blt_rssi.action.OnGattFailed"
     }
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
@@ -30,11 +31,13 @@ class BluetoothCallback : BluetoothGattCallback()  {
                 }
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
                 gatt.close()
-                onDisconnected()
+                runOnUiThread{
+                    onDisconnected()
+                }
             }
         } else {
             runOnUiThread {
-                onReadRssiFailed()
+                onGattFailed()
                 onFinish()
             }
             gatt.close()
@@ -55,7 +58,7 @@ class BluetoothCallback : BluetoothGattCallback()  {
             }
         } else {
             runOnUiThread {
-                onReadRssiFailed()
+                onGattFailed()
                 onFinish()
             }
         }
@@ -64,15 +67,20 @@ class BluetoothCallback : BluetoothGattCallback()  {
 
     private fun onConnected() {
         Log.i(tag, "onConnected()")
+        BluetoothService.isConnected = true
         sendMyBroadcast(intentOnConnected)
     }
 
     private fun onDisconnected() {
         Log.i(tag, "onDisconnected()")
-        sendMyBroadcast(intenOnDisconnected)
+        BluetoothService.isConnected = false
+        sendMyBroadcast(intentOnDisconnected)
     }
-    private fun onReadRssiFailed() {
-        Log.i(tag,"onReadRssiFailed()")
+    private fun onGattFailed() {
+        Log.i(tag,"onGattFailed()")
+        BluetoothService.isConnected = false
+        sendMyBroadcast(intentOnDisconnected)
+//        sendMyBroadcast(intentOnGattFailed)
         onFailure()
     }
 
@@ -91,9 +99,10 @@ class BluetoothCallback : BluetoothGattCallback()  {
     }
 
     // Notification to caller
-    private val intentOnConnected = Intent(ON_CONNECTED).apply { ON_DISCONNECTED }
-    private val intenOnDisconnected = Intent(ON_DISCONNECTED).apply { ON_DISCONNECTED }
-    private val intentOnReadRssiSuccess= Intent(ON_READ_RSSI_SUCCESS).apply { `package` = PACKAGE_NAME }
+    private val intentOnConnected = Intent(ON_CONNECTED).apply { `package` = PACKAGE_NAME }
+    private val intentOnDisconnected = Intent(ON_DISCONNECTED).apply { `package` = PACKAGE_NAME }
+    private val intentOnReadRssiSuccess = Intent(ON_READ_RSSI_SUCCESS).apply { `package` = PACKAGE_NAME }
+    private val intentOnGattFailed = Intent(ON_GATT_FAILED).apply { `package` = PACKAGE_NAME }
     private fun sendMyBroadcast(intent: Intent) {
         MyApplication.context.sendBroadcast(intent)
     }

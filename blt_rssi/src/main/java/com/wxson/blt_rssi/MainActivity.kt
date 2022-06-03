@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
                 "showMsg" -> showMsg(msg.obj as String)
                 "connectStatus" -> {
                     val isConnected = msg.obj as Boolean
+                    binding.toggleBtnRssi.isChecked = false
                     binding.toggleBtnRssi.isEnabled = isConnected
                     binding.ivConnectState.setImageDrawable(
                         ResourcesCompat.getDrawable(resources, if (isConnected) R.drawable.ic_connected else R.drawable.ic_disconnected, this.theme)

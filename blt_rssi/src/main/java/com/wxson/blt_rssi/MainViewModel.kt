@@ -13,8 +13,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.wxson.blt_rssi.bt.BluetoothService
 import com.wxson.blt_rssi.bt.BluetoothCallback
-import com.wxson.blt_rssi.bt.ReadRssiIntentService
 import com.wxson.blt_rssi.util.Msg
+import kotlin.concurrent.thread
 
 @SuppressLint("MissingPermission")
 class MainViewModel : ViewModel() {
@@ -29,9 +29,9 @@ class MainViewModel : ViewModel() {
     val toggleBtnRssiOnCheckedChangeListener = CompoundButton.OnCheckedChangeListener {
             _, isChecked ->
         if (isChecked) {
-            ReadRssiIntentService.startActionRead(MyApplication.context)
+            BluetoothService.startReadRssiThread()
         } else {
-            ReadRssiIntentService.stopActionRead()
+            BluetoothService.stopReadRssiThread()
         }
     }
 
@@ -40,6 +40,9 @@ class MainViewModel : ViewModel() {
         override fun onReceive(context: Context, intent: Intent) {
             Log.i(tag, "onReceive() intent=${intent.action}")
             when (intent.action) {
+                BluetoothCallback.ON_GATT_FAILED ->{
+                    _msgLiveData.value = Msg("showMsg", "ON_GATT_FAILED")
+                }
                 BluetoothCallback.ON_CONNECTED -> {
                     // set item color red
                     deviceAdapter.notifyDataSetChanged()
@@ -83,7 +86,10 @@ class MainViewModel : ViewModel() {
     }
 
     private fun connectGattAction(device: BluetoothDevice) {
-        BluetoothService.connectGatt(device, BluetoothCallback())
+        if (BluetoothService.isConnected)
+            BluetoothService.disconnectGatt()
+        else
+            BluetoothService.connectGatt(device, BluetoothCallback())
     }
 
     private fun getBondedDevices() {

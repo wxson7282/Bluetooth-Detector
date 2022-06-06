@@ -39,8 +39,14 @@ object BluetoothService {
         Log.i(tag, "connectFinished()")
     }
 
-    fun readRssi() {
-            bluetoothGatt?.readRemoteRssi()
+    private fun readRssi() {
+            bluetoothGatt?.let{
+                if (it.readRemoteRssi()) {
+                    Log.i(tag, "readRemoteRssi success")
+                } else {
+                    Log.i(tag, "readRemoteRssi failed")
+                }
+            }
     }
 
     private var isThreadRunning = false
@@ -50,7 +56,7 @@ object BluetoothService {
             Log.i(tag, "readRssiThread start")
             while (isThreadRunning) {
                 readRssi()
-                Thread.sleep(200)
+                Thread.sleep(500)
             }
             Log.i(tag, "readRssiThread end")
         }

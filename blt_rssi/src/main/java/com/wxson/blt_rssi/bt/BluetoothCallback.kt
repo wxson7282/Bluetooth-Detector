@@ -62,7 +62,6 @@ class BluetoothCallback : BluetoothGattCallback()  {
                 onFinish()
             }
         }
-        gatt.close()
     }
 
     private fun onConnected() {

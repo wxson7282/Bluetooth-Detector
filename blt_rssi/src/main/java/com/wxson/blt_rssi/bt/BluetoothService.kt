@@ -3,10 +3,12 @@ package com.wxson.blt_rssi.bt
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
-import android.content.Intent
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import com.wxson.blt_rssi.MyApplication
-import kotlin.concurrent.thread
+import kotlinx.coroutines.delay
 
 @SuppressLint("MissingPermission")
 object BluetoothService {
@@ -28,6 +30,7 @@ object BluetoothService {
         if (isConnected) {
             Thread.sleep(300)
             try {
+                if (job.isActive) job.cancel()
                 bluetoothGatt?.disconnect()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -42,28 +45,32 @@ object BluetoothService {
     private fun readRssi() {
             bluetoothGatt?.let{
                 if (it.readRemoteRssi()) {
-                    Log.i(tag, "readRemoteRssi success")
+//                    Log.i(tag, "readRemoteRssi success")
                 } else {
                     Log.i(tag, "readRemoteRssi failed")
                 }
             }
     }
 
-    private var isThreadRunning = false
-    fun startReadRssiThread() {
-        isThreadRunning = true
-        thread {
-            Log.i(tag, "readRssiThread start")
-            while (isThreadRunning) {
+    private lateinit var job: Job   // background job for coroutine
+    private lateinit var scope: CoroutineScope
+    fun startReadRssiCoroutine() {
+        job = Job()
+        scope = CoroutineScope(job)
+        scope.launch {
+            Log.i(tag, "RssiCoroutine start")
+            while (true) {
                 readRssi()
-                Thread.sleep(500)
+                delay(500)
             }
-            Log.i(tag, "readRssiThread end")
         }
     }
 
-    fun stopReadRssiThread() {
-        isThreadRunning = false
+    fun stopReadRssiCoroutine() {
+        if (this::job.isInitialized) {
+            job.cancel()
+            Log.i(tag, "RssiCoroutine stop")
+        }
     }
 
 }

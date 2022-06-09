@@ -29,9 +29,9 @@ class MainViewModel : ViewModel() {
     val toggleBtnRssiOnCheckedChangeListener = CompoundButton.OnCheckedChangeListener {
             _, isChecked ->
         if (isChecked) {
-            BluetoothService.startReadRssiThread()
+            BluetoothService.startReadRssiCoroutine()
         } else {
-            BluetoothService.stopReadRssiThread()
+            BluetoothService.stopReadRssiCoroutine()
         }
     }
 
